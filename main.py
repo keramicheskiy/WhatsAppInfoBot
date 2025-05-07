@@ -13,17 +13,28 @@ bot = GreenAPIBot(
 )
 
 
+@bot.router.message(text_message=("/start", "start", "/help", "help"))
+@personal_chats_only
+@admins_only_or_send_base_message
+def help(notification: Notification) -> None:
+    text = """
+    /base_message - Получить базовый ответ.
+    /settings - Получить настройки.
+    /settings {...} - Заменить настройки на json.
+    /field "field" "value" - Поменять значение поля.
+    /ignore number - Не отсылать базовый ответ номеру.
+    /unignore number - Отсылать базовый ответ номеру. 
+    /redirect number "name" - Перенаправлять сообщения номера в телеграм.
+    /unredirect number - Не перенаправлять сообщения номера в телеграм.
+    """
+    notification.answer(text)
+
+
 @bot.router.message(text_message=("/base_message", "base_message"))
 @personal_chats_only
 def message_handler(notification: Notification) -> None:
     notification.answer(get_settings()["base_message"])
 
-
-@bot.router.message(text_message=("/settings", "settings"))
-@personal_chats_only
-@admins_only_or_send_base_message
-def echo_handler(notification: Notification) -> None:
-    notification.answer(str(services.get_settings()).replace("'", '"'))
 
 @bot.router.message()
 @redirect
@@ -33,8 +44,11 @@ def echo_handler(notification: Notification) -> None:
     message = notification.message_text.replace("'", '"')
 
     if message.split(" ")[0] in ["/settings", "settings"]:
-        services.change_settings(" ".join(message.split(" ")[1:]))
-        notification.answer(str(services.get_settings()).replace("'", '"'))
+        if len(message.split(" ")) == 1:
+            notification.answer(str(services.get_settings()).replace("'", '"'))
+        else:
+            services.change_settings(" ".join(message.split(" ")[1:]))
+            notification.answer(str(services.get_settings()).replace("'", '"'))
     elif message.split(" ")[0] in ["/field", "field"]:
         services.change_settings_field(message.split('"')[1], message.split('"')[3])
         notification.answer(str(services.get_settings()).replace("'", '"'))

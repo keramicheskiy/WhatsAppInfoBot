@@ -12,7 +12,6 @@ def admins_only_or_send_base_message(func):
             func(notification, *args, **kwargs)
         else:
             number = services.normalize_number(notification.chat)
-            print(number, services.get_settings()["ignore"])
             if number not in services.get_settings()["ignore"]:
                 notification.answer(get_settings()["base_message"])
 
