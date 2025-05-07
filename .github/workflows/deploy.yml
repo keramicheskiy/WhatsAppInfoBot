@@ -25,7 +25,7 @@ jobs:
           set -e
           cd ~/WhatsAppInfoBot/
           git pull origin main
-          cp ~/environments/whatsapp-bot/.env.prod ~/WhatsAppInfoBot/.env.prod
+          cp ~/environments/whatsapp-bot/.env.prod ~/WhatsAppInfoBot/
           docker-compose down
           docker-compose up --build -d
         EOF
