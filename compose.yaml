@@ -7,6 +7,8 @@ services:
     restart: on-failure
     volumes:
       - ./settings.json:/bot/settings.json
+    environment:
+      - ENV_FILE=.env.prod
 
 
 
