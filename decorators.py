@@ -34,7 +34,6 @@ def redirect(func):
         if number in redirects.keys():
             text = (services.get_settings()["telegram_notification"]
                     .format(redirects[number], notification.message_text))
-
             url = f"https://api.telegram.org/bot{config.telegram_token}/sendMessage"
             data = {"chat_id": config.admin_tg_id, "text": text}
             requests.post(url, data)
