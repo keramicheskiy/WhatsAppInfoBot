@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  bot:
+    build: .
+    container_name: whatsapp-bot
+    restart: on-failure
+    volumes:
+      - ./settings.json:/bot/settings.json
+
+
+
